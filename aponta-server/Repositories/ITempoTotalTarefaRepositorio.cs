@@ -12,6 +12,6 @@ namespace apontaServer.Repositories
 
         void Put(int id, long tempo);
 
-        TempoTotalTarefa Get(int idUsuario, int idTarefa);
+        TempoTotalTarefa Get(int idTarefa);
     }
 }

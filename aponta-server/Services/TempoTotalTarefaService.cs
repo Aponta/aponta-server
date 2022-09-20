@@ -27,7 +27,7 @@ namespace apontaServer.Services
             {
                 var diferenca = apontamento.DATA_HORA_FINAL.Subtract(apontamento.DATA_HORA_INICIAL).TotalMilliseconds;
 
-                var tempoTotalTarefa = repositorio.Get(apontamento.USUARIO.ID_USUARIO, apontamento.TAREFA.ID_TAREFA);
+                var tempoTotalTarefa = repositorio.Get(apontamento.TAREFA.ID_TAREFA);
 
                 if(tempoTotalTarefa != null)
                 {
@@ -35,7 +35,7 @@ namespace apontaServer.Services
                 }
                 else
                 {
-                    repositorio.Post(new TempoTotalTarefa(0, Convert.ToInt64(diferenca), apontamento.USUARIO, apontamento.TAREFA));
+                    repositorio.Post(new TempoTotalTarefa(0, Convert.ToInt64(diferenca), apontamento.TAREFA));
                 }
 
             }
@@ -49,14 +49,13 @@ namespace apontaServer.Services
         {
             try
             {
-                var tempoTotalTarefa = repositorio.Get(idUsuario, IdTarefa);
+                var tempoTotalTarefa = repositorio.Get(IdTarefa);
 
                 if(tempoTotalTarefa == null)
                 {
                     throw new Exception("Sem total para essa tarefa");
                 }
 
-                tempoTotalTarefa.USUARIO = usuario.BuscarLogin(idUsuario);
                 tempoTotalTarefa.TAREFA = tarefa.BuscarTarefa(IdTarefa, null, false);
 
                 return tempoTotalTarefa;
