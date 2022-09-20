@@ -360,3 +360,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+aponta-server/appsettings.json
+aponta-server/appsettings.Development.json
