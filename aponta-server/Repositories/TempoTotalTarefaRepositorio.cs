@@ -25,7 +25,7 @@ namespace apontaServer.Repositories
                 using (var cn = Conexao.AbrirConexao())
                 {
                     var resposta = cn.Query<TempoTotalTarefa>(@"SELECT TT.* FROM T_TEMPO_TOTAL_TAREFA TT 
-                                            WHERE AND TT.ID_TAREFA = @idTarefa", new { idTarefa });
+                                            WHERE TT.ID_TAREFA = @idTarefa", new { idTarefa });
 
                     return resposta.FirstOrDefault();
                 }

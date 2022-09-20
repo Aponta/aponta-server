@@ -32,11 +32,41 @@ namespace apontaServer.Services
                     new Claim(ClaimTypes.Name, usuario.USUARIO),
                     new Claim(ClaimTypes.NameIdentifier, usuario.USUARIO)
                 }),
-                Expires = DateTime.UtcNow.AddHours(8),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.UtcNow.AddHours(4),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public bool ValidarToken(string token)
+        {
+            if(String.IsNullOrEmpty(token) || token == "null")
+                return true;
+
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("KeyAuth"));
+                SecurityToken validatedToken = null;
+                var tokenValidateParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateLifetime = true,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateIssuerSigningKey = true
+                };
+
+                tokenHandler.ValidateToken(token, tokenValidateParameters, out validatedToken);
+
+                return true;
+
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

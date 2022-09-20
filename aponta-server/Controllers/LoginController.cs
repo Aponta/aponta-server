@@ -37,13 +37,5 @@ namespace apontaServer.Controllers
         {
             return loginService.CadastrarLogin(usuario.USUARIO, usuario.retornarSenha());
         }
-
-        [HttpGet]
-        [Route("logado")]
-        [Authorize]
-        public ActionResult<bool> Get()
-        {
-            return true;
-        }
     }
 }

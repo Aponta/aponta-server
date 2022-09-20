@@ -1,4 +1,6 @@
 ﻿using apontaServer.Database;
+using apontaServer.Middlewares;
+using apontaServer.Middlewares.Authorization;
 using apontaServer.Repositories;
 using apontaServer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -108,6 +110,7 @@ namespace aponta_server
             services.AddScoped(sp => new ApontamentoService(sp.GetService<IApontamentoRepositorio>(), sp.GetService<TarefaService>(), sp.GetService<LoginService>(), sp.GetService<TempoTotalTarefaService>(), sp.GetService<MetodosGenericosService>()));
             services.AddScoped(sp => new TempoTotalTarefaService(sp.GetService<ITempoTotalTarefaRepositorio>(), sp.GetService<TarefaService>(), sp.GetService<LoginService>()));
             services.AddScoped(sp => new TarefaService(sp.GetService<ITarefaRepositorio>()));
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -116,7 +119,10 @@ namespace aponta_server
 
             app.UseRouting();
 
+
             app.UseCors();
+
+            //app.UseMiddlewareAuthorization();
 
             app.UseAuthentication();
             app.UseAuthorization();
