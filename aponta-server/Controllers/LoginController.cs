@@ -45,15 +45,5 @@ namespace apontaServer.Controllers
         {
             return true;
         }
-
-        [HttpGet]
-        [Route("Teste")]
-        [AllowAnonymous]
-        public ActionResult<string> Teste()
-        {
-            return "RETORNO TESTE";
-        }
     }
-
-
 }

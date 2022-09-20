@@ -95,5 +95,12 @@ namespace apontaServer.Controllers
         {
             return apontamentoService.UltimoApontamentoUsuario(id);
         }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public ActionResult<dynamic> Delete(int id)
+        {
+            return apontamentoService.ExluirApontamento(id);
+        }
     }
 }

@@ -7,21 +7,47 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace aponta_server
 {
     public class Startup
     {
-
-        public Startup(IConfiguration configuration)
+        /// <summary>
+        /// Construtor da classe inicial
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="env"></param>
+        public Startup(IConfiguration configuration, IHostEnvironment env)
         {
-            Configuration = configuration;
+            var jsonName = new List<string>()
+            {
+                "appsettings"
+            };
+
+            if(env.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
+                jsonName.Add(env.EnvironmentName);
+
+            jsonName.Add("json");
+
+            var jsonStr = string.Join(".", jsonName);
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile(jsonStr, optional: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+            Env = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostEnvironment Env { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {

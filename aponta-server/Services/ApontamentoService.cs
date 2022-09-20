@@ -55,8 +55,6 @@ namespace apontaServer.Services
 
                 apontamento.DATA_HORA_INICIAL = metodos.DataHoraBrasilia();
 
-                apontamento.TAREFA = tarefa.CadastrarTarefa(apontamento.TAREFA);
-
                 repositorio.Post(apontamento);
 
                 return UltimoApontamentoUsuario(apontamento.USUARIO.ID_USUARIO);
@@ -225,6 +223,35 @@ namespace apontaServer.Services
                 throw;
             }
             
+        }
+
+        public ActionResult<dynamic> ExluirApontamento(int id)
+        {
+            try
+            {
+                var apontamento = repositorio.Get(id);
+
+                if(apontamento == null)
+                {
+                    return new
+                    {
+                        success =  false,
+                        message = "Apontamento não encontrado"
+                    };
+                }
+
+                repositorio.Delete(id);
+
+                return new
+                {
+                    success = true,
+                    message = "Apontamento exluido com sucesso"
+                };
+            }
+            catch(Exception)
+            {
+                throw;
+            }
         }
     }
 }

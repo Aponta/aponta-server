@@ -21,11 +21,11 @@ namespace apontasServer.Controllers
             this.tarefaService = tarefaService;
         }
 
-        [HttpGet("{idTarefa}")]
+        [HttpGet("{idTarefa}/{idUsuario}")]
         [Authorize]
-        public ActionResult<dynamic> GetTarefa(int idTarefa)
+        public ActionResult<dynamic> GetTarefa(int idTarefa, int idUsuario)
         {
-            return tarefaService.ListTarefa(idTarefa);
+            return tarefaService.ListTarefa(idTarefa, idUsuario);
         }
     }
 }

@@ -18,8 +18,15 @@ namespace apontaServer.Database
 
         public IDbConnection AbrirConexao()
         {
-            var cn = new MySqlConnection(connectionString);
-            return cn;
+            try
+            {
+                var cn = new MySqlConnection(connectionString);
+                return cn;
+            }
+            catch(Exception e)
+            {
+                throw;
+            }
         }
     }
 }

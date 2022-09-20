@@ -17,6 +17,21 @@ namespace apontaServer.Repositories
             this.Conexao = conexao;
         }
 
+        public void Delete(int id)
+        {
+            try
+            {
+                using(var cn = Conexao.AbrirConexao())
+                {
+                    var resposta = cn.Execute(@"DELETE FROM T_APONTAMENTO WHERE ID = @id", new { id });
+                }
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+        }
+
         public Apontamento Get(int IdUsuario, int IdTarefa)
         {
             try

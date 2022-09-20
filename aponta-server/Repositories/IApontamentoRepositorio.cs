@@ -25,5 +25,7 @@ namespace apontaServer.Repositories
         void Put(int id, DateTime dataHoraFinal);
 
         void Put(int id, int idTarefa);
+
+        void Delete(int id);
     }
 }

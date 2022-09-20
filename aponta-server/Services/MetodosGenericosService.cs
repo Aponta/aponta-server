@@ -3,6 +3,7 @@ using apontaServer.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace apontaServer.Services
@@ -42,6 +43,12 @@ namespace apontaServer.Services
             }
         }
 
-        public DateTime DataHoraBrasilia() => TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
+        public DateTime DataHoraBrasilia()
+        {
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
+            else
+                return TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo"));
+        }
     }
 }

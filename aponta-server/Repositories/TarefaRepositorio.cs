@@ -56,13 +56,17 @@ namespace apontaServer.Repositories
             }
         }
 
-        public List<Tarefa> List(int idTarefa)
+        public List<Tarefa> List(int idTarefa, int idUsuario)
         {
             try
             {
                 using(var cn = Conexao.AbrirConexao())
                 {
-                    var resposta = cn.Query<Tarefa>("SELECT *, ID AS ID_TAREFA FROM T_TAREFA WHERE ID_TAREFA_CHAMADO LIKE @idTarefa", new { idTarefa = idTarefa + "%" });
+                    var resposta = cn.Query<Tarefa>(@"
+                        SELECT *, ID AS ID_TAREFA FROM T_TAREFA 
+                        WHERE ID_USUARIO = @idUsuario AND 
+                        ID_TAREFA_CHAMADO LIKE @idTarefa", 
+                        new { idTarefa = idTarefa + "%", idUsuario });
 
                     return resposta.ToList();
                 }
@@ -79,11 +83,12 @@ namespace apontaServer.Repositories
             {
                 using (var cn = Conexao.AbrirConexao())
                 {
-                    cn.Execute(@"INSERT INTO T_TAREFA (ID_TAREFA_CHAMADO, CLIENTE_TAREFA) 
-                                VALUES (@ID_TAREFA_CHAMADO, @CLIENTE_TAREFA)", new
+                    cn.Execute(@"INSERT INTO T_TAREFA (ID_TAREFA_CHAMADO, CLIENTE_TAREFA, ID_USUARIO) 
+                                VALUES (@ID_TAREFA_CHAMADO, @CLIENTE_TAREFA, @ID_USUARIO)", new
                     {
                         tarefa.ID_TAREFA_CHAMADO,
-                        tarefa.CLIENTE_TAREFA
+                        tarefa.CLIENTE_TAREFA,
+                        tarefa.LOGIN.ID_USUARIO
                     });
                 }
 

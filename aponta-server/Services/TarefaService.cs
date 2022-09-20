@@ -55,11 +55,11 @@ namespace apontaServer.Services
             }
         }
 
-        public ActionResult<dynamic> ListTarefa(int idTarefa)
+        public ActionResult<dynamic> ListTarefa(int idTarefa, int idUsuario)
         {
             try
             {
-                List<Tarefa> list = repositorio.List(idTarefa);
+                List<Tarefa> list = repositorio.List(idTarefa, idUsuario);
 
                 if(list.Count == 0)
                 {
