@@ -13,5 +13,9 @@ namespace apontaServer.Repositories
         void Put(int id, long tempo);
 
         TempoTotalTarefa Get(int idTarefa);
+
+        List<dynamic> List(Login usuario, int quantidadeRegistros, int offset);
+
+        List<TempoTotalTarefa> List(Tarefa tarefa, int quantidadeRegistros, int offset);
     }
 }

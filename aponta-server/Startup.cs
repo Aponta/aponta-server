@@ -108,7 +108,7 @@ namespace aponta_server
             services.AddScoped(sp => new LoginService(sp.GetService<ILoginRepositorio>(), sp.GetService<TokenService>()));
             services.AddScoped(sp => new TarefaService(sp.GetService<ITarefaRepositorio>()));
             services.AddScoped(sp => new ApontamentoService(sp.GetService<IApontamentoRepositorio>(), sp.GetService<TarefaService>(), sp.GetService<LoginService>(), sp.GetService<TempoTotalTarefaService>(), sp.GetService<MetodosGenericosService>()));
-            services.AddScoped(sp => new TempoTotalTarefaService(sp.GetService<ITempoTotalTarefaRepositorio>(), sp.GetService<TarefaService>(), sp.GetService<LoginService>()));
+            services.AddScoped(sp => new TempoTotalTarefaService(sp.GetService<ITempoTotalTarefaRepositorio>(), sp.GetService<TarefaService>(), sp.GetService<LoginService>(), sp.GetService<MetodosGenericosService>()));
             services.AddScoped(sp => new TarefaService(sp.GetService<ITarefaRepositorio>()));
 
         }

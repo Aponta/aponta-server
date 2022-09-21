@@ -36,6 +36,59 @@ namespace apontaServer.Repositories
             }
         }
 
+        public List<dynamic> List(Login usuario, int quantidadeRegistros, int offset)
+        {
+            try
+            {
+                using(var cn = Conexao.AbrirConexao())
+                {
+                    var resposta = cn.Query(@"SELECT TTT.* FROM T_TEMPO_TOTAL_TAREFA TTT
+                            INNER JOIN T_TAREFA T ON TTT.ID_TAREFA = T.ID INNER JOIN T_LOGIN L 
+                            ON T.ID_USUARIO = L.ID WHERE T.ID_USUARIO = @ID_USUARIO 
+                            ORDER BY TTT.ID DESC LIMIT @quantidadeRegistros OFFSET @offset",
+                            new
+                            {
+                                usuario.ID_USUARIO,
+                                quantidadeRegistros,
+                                offset
+                            });
+
+                    return resposta.ToList();
+                }
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<TempoTotalTarefa> List(Tarefa tarefa, int quantidadeRegistros, int offset)
+        {
+            try
+            {
+                using(var cn = Conexao.AbrirConexao())
+                {
+                    var resposta = cn.Query<TempoTotalTarefa>(@"
+                            SELECT * FROM T_TEMPO_TOTAL_TAREFA TTT
+                            INNER JOIN T_TAREFA T ON TTT.ID_TAREFA = T.ID 
+                            WHERE T.ID = @ID_TAREFA
+                            ORDER BY TTT.ID DESC LIMIT @quantidadeRegistros OFFSET @offset",
+                            new
+                            {
+                                tarefa.ID_TAREFA,
+                                quantidadeRegistros,
+                                offset
+                            });
+
+                    return resposta.ToList();
+                }
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+        }
+
         public void Post(TempoTotalTarefa tempoTotalTarefa)
         {
             try

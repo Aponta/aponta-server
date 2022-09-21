@@ -22,11 +22,26 @@ namespace apontaServer.Controllers
         }
 
 
-        [HttpGet("{idUsuario}/{idTarefa}")]
+        [HttpPost("usuario")]
         [Authorize]
-        public TempoTotalTarefa Get(int idUsuario, int idTarefa)
+        public dynamic GetTempoTotalTarefaPorUsuario([FromBody] dynamic obj)
         {
-            return tempoTotalTarefaService.BuscarTempoTotalTarefa(idUsuario, idTarefa);
+            return tempoTotalTarefaService.ListarTempoTotalTarefaPaginadoPorUsuario(
+                Int32.Parse(obj.GetProperty("idUsuario").GetString()),
+                obj.GetProperty("quantidadePagina").GetInt32(),
+                obj.GetProperty("paginaAtual").GetInt32()
+                );
+        }
+
+        [HttpPost("tarefa")]
+        [Authorize]
+        public dynamic GetTempoTotalTarefaPorTarefa([FromBody] dynamic obj)
+        {
+            return tempoTotalTarefaService.ListarTempoTotalTarefaPaginadoPorUsuario(
+                obj.GetProperty("idTarefa").GetInt32(),
+                obj.GetProperty("quantidadePagina").GetInt32(),
+                obj.GetProperty("paginaAtual").GetInt32()
+                );
         }
     }
 }
