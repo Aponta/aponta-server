@@ -56,6 +56,26 @@ namespace apontaServer.Repositories
             }
         }
 
+        public List<Tarefa> GetTarefa(string termo)
+        {
+            try
+            {
+                using(var cn = Conexao.AbrirConexao())
+                {
+                    var resposta = cn.Query<Tarefa>(@"
+                        SELECT * FROM T_TAREFA WHERE ID_TAREFA_CHAMADO LIKE @termo
+                        UNION
+                        SELECT * FROM T_TAREFA WHERE CLIENTE_TAREFA LIKE @termo", new { termo = termo + "%" });
+
+                    return resposta.ToList();
+                }
+            }
+            catch(MySqlException e)
+            {
+                throw new DbException("Erro ao executar comando sql: " + e.ToString());
+            }
+        }
+
         public List<Tarefa> List(int idTarefa, int idUsuario)
         {
             try

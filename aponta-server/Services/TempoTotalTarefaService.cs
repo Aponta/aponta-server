@@ -108,23 +108,40 @@ namespace apontaServer.Services
             }
         }
 
-        public ActionResult<dynamic> ListarTempoTotalTarefaPaginadoPorTarefa(int idTarefa, int quatidadePagina, int paginaAtual)
+        public ActionResult<dynamic> ListarTempoTotalTarefaPaginadoPorTermo(string termo, int quatidadePagina, int paginaAtual)
         {
             try
             {
-                var tarefaDb = tarefa.BuscarTarefa(idTarefa, null, false);
+                var tarefasDb = tarefa.BuscarTarefa(termo);
 
-                if(tarefaDb == null)
+                if(tarefasDb.Count() == 0)
                 {
                     return new
                     {
-                        message = "Ocorreu um erro"
+                        message = "Nada encontrado"
                     };
                 }
 
+                var teste = tarefasDb.Select(item => item.ID_TAREFA);
+
+                var where = String.Format(@"ID_TAREFA IN ({0})", );
+                var quatidadeRegistrosTabela = metodos.Dlookup("COUNT(TTT.ID)", "T_TEMPO_TOTAL_TAREFA", where);
+
+                var offset = quatidadePagina * paginaAtual;
+
                 return new
                 {
-                    data = repositorio.List(tarefaDb, quatidadePagina, paginaAtual)
+                    listaTempoTotalTarefa = repositorio.List(tarefasDb, quatidadePagina, offset).Select(item =>
+                    {
+                        return new
+                        {
+                            id = item.ID,
+                            TEMPO_TOTAL = item.TEMPO_TOTAL,
+                            TAREFA = tarefa.BuscarTarefa(item.ID_TAREFA, null, false)
+                        };
+                    }),
+                    total = quatidadeRegistrosTabela,
+                    paginaAtual = paginaAtual
                 };
             }
             catch(Exception)

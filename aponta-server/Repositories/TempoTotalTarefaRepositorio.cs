@@ -62,20 +62,20 @@ namespace apontaServer.Repositories
             }
         }
 
-        public List<TempoTotalTarefa> List(Tarefa tarefa, int quantidadeRegistros, int offset)
+        public List<dynamic> List(List<Tarefa> tarefas, int quantidadeRegistros, int offset)
         {
             try
             {
                 using(var cn = Conexao.AbrirConexao())
                 {
-                    var resposta = cn.Query<TempoTotalTarefa>(@"
+                    var resposta = cn.Query(@"
                             SELECT * FROM T_TEMPO_TOTAL_TAREFA TTT
                             INNER JOIN T_TAREFA T ON TTT.ID_TAREFA = T.ID 
-                            WHERE T.ID = @ID_TAREFA
+                            WHERE T.ID IN (@listIds)
                             ORDER BY TTT.ID DESC LIMIT @quantidadeRegistros OFFSET @offset",
                             new
                             {
-                                tarefa.ID_TAREFA,
+                                listIds = tarefas.Select(item => item.ID_TAREFA),
                                 quantidadeRegistros,
                                 offset
                             });

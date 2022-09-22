@@ -55,6 +55,18 @@ namespace apontaServer.Services
             }
         }
 
+        public List<Tarefa> BuscarTarefa(string termo)
+        {
+            try
+            {
+                return repositorio.GetTarefa(termo);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+        }
+
         public ActionResult<dynamic> ListTarefa(int idTarefa, int idUsuario)
         {
             try
