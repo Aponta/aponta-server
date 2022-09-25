@@ -55,11 +55,11 @@ namespace apontaServer.Services
             }
         }
 
-        public List<Tarefa> BuscarTarefa(string termo)
+        public List<Tarefa> BuscarTarefa(int idUsuario, string termo)
         {
             try
             {
-                return repositorio.GetTarefa(termo);
+                return repositorio.GetTarefa(idUsuario, termo);
             }
             catch(Exception)
             {

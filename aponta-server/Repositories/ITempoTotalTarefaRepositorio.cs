@@ -16,6 +16,6 @@ namespace apontaServer.Repositories
 
         List<dynamic> List(Login usuario, int quantidadeRegistros, int offset);
 
-        List<dynamic> List(List<Tarefa> tarefas, int quantidadeRegistros, int offset);
+        List<dynamic> List(List<Tarefa> tarefasDb, int quantidadeRegistros, int offset);
     }
 }

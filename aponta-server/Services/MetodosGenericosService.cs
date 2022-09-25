@@ -50,5 +50,17 @@ namespace apontaServer.Services
             else
                 return TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo"));
         }
+
+        public string FormataLista<T>(IEnumerable<T> lista)
+        {
+            string retorno = "";
+            foreach(T item in lista)
+            {
+               retorno += $"{item.ToString()}, ";
+            }
+
+            return retorno.Remove(retorno.Length - 2);
+
+        }
     }
 }

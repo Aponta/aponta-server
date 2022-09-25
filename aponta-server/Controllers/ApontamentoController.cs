@@ -71,11 +71,15 @@ namespace apontaServer.Controllers
             return apontamentoService.ListarApontamentoUsuario(id);
         }
 
-        [HttpGet("tarefa/{id}")]
+        [HttpPost("tarefa")]
         [Authorize]
-        public List<Apontamento> GetTarefa(int id)
+        public dynamic GetApontamentoTarefa([FromBody] dynamic obj)
         {
-            return apontamentoService.ListarApontamentoTarefa(id);
+            return apontamentoService.ListarApontamentoTarefaPaginado(
+                obj.GetProperty("idTarefa").GetInt32(),
+                obj.GetProperty("quantidadePagina").GetInt32(),
+                obj.GetProperty("paginaAtual").GetInt32()
+                );
         }
 
         [HttpPost("paginado")]

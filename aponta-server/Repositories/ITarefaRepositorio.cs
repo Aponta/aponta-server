@@ -12,7 +12,7 @@ namespace apontaServer.Repositories
 
         Tarefa GetTarefa(int idTarefa);
 
-        List<Tarefa> GetTarefa(string termo);
+        List<Tarefa> GetTarefa(int idUsuario, string termo);
 
         Tarefa Post(Tarefa tarefa);
 

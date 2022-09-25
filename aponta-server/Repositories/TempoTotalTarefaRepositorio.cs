@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using apontaServer.Services;
 
 namespace apontaServer.Repositories
 {
@@ -62,20 +63,20 @@ namespace apontaServer.Repositories
             }
         }
 
-        public List<dynamic> List(List<Tarefa> tarefas, int quantidadeRegistros, int offset)
+        public List<dynamic> List(List<Tarefa> tarefasDb, int quantidadeRegistros, int offset)
         {
             try
             {
                 using(var cn = Conexao.AbrirConexao())
                 {
                     var resposta = cn.Query(@"
-                            SELECT * FROM T_TEMPO_TOTAL_TAREFA TTT
+                            SELECT TTT.* FROM T_TEMPO_TOTAL_TAREFA TTT
                             INNER JOIN T_TAREFA T ON TTT.ID_TAREFA = T.ID 
-                            WHERE T.ID IN (@listIds)
+                            WHERE T.ID IN @ids
                             ORDER BY TTT.ID DESC LIMIT @quantidadeRegistros OFFSET @offset",
                             new
                             {
-                                listIds = tarefas.Select(item => item.ID_TAREFA),
+                                ids = tarefasDb.Select(item => item.ID_TAREFA),
                                 quantidadeRegistros,
                                 offset
                             });

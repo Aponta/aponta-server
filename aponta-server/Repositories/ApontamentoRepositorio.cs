@@ -111,16 +111,20 @@ namespace apontaServer.Repositories
             }
         }
 
-        public List<Apontamento> List(Tarefa tarefa)
+        public List<Apontamento> List(Tarefa tarefa, int quantidadeRegistros, int offset)
         {
             try
             {
                 using (var cn = Conexao.AbrirConexao())
                 {
-                    var resposta = cn.Query<Apontamento>(@"SELECT AP.* FROM T_APONTAMENTO AP
-                            INNER JOIN T_LOGIN LO ON AP.ID_TAREFA = LO.ID INNER JOIN T_TAREFA TA ON 
-                            AP.ID_TAREFA = TA.ID WHERE AP.ID_TAREFA = @ID_TAREFA",
-                            new { tarefa.ID_TAREFA });
+                    var resposta = cn.Query<Apontamento>(@"SELECT * FROM T_APONTAMENTO
+                            WHERE ID_TAREFA = @ID_TAREFA ORDER BY ID 
+                            DESC LIMIT @quantidadeRegistros OFFSET @offset",
+                            new { 
+                                tarefa.ID_TAREFA,
+                                quantidadeRegistros,
+                                offset
+                            });
 
                     return resposta.ToList();
                 }

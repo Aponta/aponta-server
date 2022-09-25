@@ -68,7 +68,7 @@ namespace apontaServer.Services
             }
         }
 
-        public ActionResult<dynamic> ListarTempoTotalTarefaPaginadoPorUsuario(int idUsuario, int quatidadePagina, int paginaAtual)
+        public ActionResult<dynamic> ListarTempoTotalTarefaPaginado(int idUsuario, int quatidadePagina, int paginaAtual)
         {
             try
             {
@@ -108,11 +108,11 @@ namespace apontaServer.Services
             }
         }
 
-        public ActionResult<dynamic> ListarTempoTotalTarefaPaginadoPorTermo(string termo, int quatidadePagina, int paginaAtual)
+        public ActionResult<dynamic> ListarTempoTotalTarefaPaginadoPorTermo(int idUsuario, string termo, int quatidadePagina, int paginaAtual)
         {
             try
             {
-                var tarefasDb = tarefa.BuscarTarefa(termo);
+                var tarefasDb = tarefa.BuscarTarefa(idUsuario,termo);
 
                 if(tarefasDb.Count() == 0)
                 {
@@ -121,11 +121,6 @@ namespace apontaServer.Services
                         message = "Nada encontrado"
                     };
                 }
-
-                var teste = tarefasDb.Select(item => item.ID_TAREFA);
-
-                var where = String.Format(@"ID_TAREFA IN ({0})", );
-                var quatidadeRegistrosTabela = metodos.Dlookup("COUNT(TTT.ID)", "T_TEMPO_TOTAL_TAREFA", where);
 
                 var offset = quatidadePagina * paginaAtual;
 
@@ -137,10 +132,10 @@ namespace apontaServer.Services
                         {
                             id = item.ID,
                             TEMPO_TOTAL = item.TEMPO_TOTAL,
-                            TAREFA = tarefa.BuscarTarefa(item.ID_TAREFA, null, false)
+                            TAREFA = tarefasDb.Where(tarefa => tarefa.ID_TAREFA == item.ID_TAREFA).First(),
                         };
                     }),
-                    total = quatidadeRegistrosTabela,
+                    total = tarefasDb.Count(),
                     paginaAtual = paginaAtual
                 };
             }

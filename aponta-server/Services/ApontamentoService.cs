@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace apontaServer.Services
 {
@@ -135,22 +136,36 @@ namespace apontaServer.Services
             }
         }
 
-        public List<Apontamento> ListarApontamentoTarefa(int id)
+        public ActionResult<dynamic> ListarApontamentoTarefaPaginado(int idTarefa, int quantidadePagina, int paginaAtual)
         {
             try
             {
-                var tarefa = this.tarefa.BuscarTarefa(id, null, false);
+                var tarefa = this.tarefa.BuscarTarefa(idTarefa, null, false);
 
-                var listaApontamento = repositorio.List(tarefa);
+                var where = String.Format(@"ID_TAREFA = {0}", idTarefa);
+                var quatidadeRegistrosTabela = metodos.Dlookup("COUNT(ID)", "T_APONTAMENTO", where);
+
+                var offset = quantidadePagina * paginaAtual;
+
+                var listaApontamento = repositorio.List(tarefa, quantidadePagina, offset);
+                
+                if(listaApontamento.Count() == 0)
+                    return null;
+
+                var usuario = this.usuario.BuscarLogin(Convert.ToInt32(metodos.Dlookup("ID_USUARIO", "T_APONTAMENTO", String.Format("ID = {0}", listaApontamento.First().ID))));
 
                 foreach (Apontamento ap in listaApontamento)
                 {
                     ap.TAREFA = tarefa;
-                    var idUsuario = metodos.Dlookup("ID_USUARIO", "T_APONTAMENTO", String.Format("ID = {0}", ap.ID));
-                    ap.USUARIO = this.usuario.BuscarLogin(Convert.ToInt32(idUsuario));
+                    ap.USUARIO = usuario;
                 }
 
-                return listaApontamento;
+                return new 
+                {
+                    listaApontamento = listaApontamento,
+                    total = quatidadeRegistrosTabela,
+                    paginaAtual = paginaAtual
+                };
             }
             catch (Exception)
             {

@@ -16,9 +16,9 @@ namespace apontaServer.Repositories
 
         List<Apontamento> List(Login usuario);
 
-        List<Apontamento> List(Login usuario, int quantidadeRegistros, int paginaAtual);
+        List<Apontamento> List(Login usuario, int quantidadeRegistros, int offset);
 
-        List<Apontamento> List(Tarefa tarefa);
+        List<Apontamento> List(Tarefa tarefa, int quantidadeRegistros, int offset);
 
         Apontamento Post(Apontamento apontamento);
 
