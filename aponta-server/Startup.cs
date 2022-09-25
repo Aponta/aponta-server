@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -57,6 +58,36 @@ namespace aponta_server
             var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("KeyAuth"));
 
             services.AddControllers().AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Aponta-Server", Version = "v1" });
+                var security = new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "JWT",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+
+                        }, new List<string>()
+                    }
+                };
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Aponta-Server Auth",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http
+                });
+                c.AddSecurityRequirement(security);
+            });
 
             services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
@@ -115,10 +146,16 @@ namespace aponta_server
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            if(env.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Aponta-Server v1"));
+            }
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
 
             app.UseCors();
 
